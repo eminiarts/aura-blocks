@@ -1,0 +1,68 @@
+{
+    "name": "eminiarts/aura-blocks",
+    "description": "Reusable structured-content blocks for Aura CMS resources.",
+    "keywords": [
+        "aura",
+        "aura-cms",
+        "blocks",
+        "content",
+        "laravel",
+        "livewire"
+    ],
+    "homepage": "https://github.com/eminiarts/aura-blocks",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Emini Arts GmbH",
+            "email": "support@eminiarts.ch",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "eminiarts/aura-cms": "^0.2.0 || ^1.0",
+        "illuminate/contracts": "^11.0|^12.0|^13.0",
+        "illuminate/support": "^11.0|^12.0|^13.0",
+        "illuminate/validation": "^11.0|^12.0|^13.0",
+        "livewire/livewire": "^3.6|^4.0",
+        "spatie/laravel-package-tools": "^1.16"
+    },
+    "require-dev": {
+        "laravel/framework": "^11.0",
+        "laravel/pint": "^1.18",
+        "nunomaduro/collision": "^8.1",
+        "orchestra/testbench": "^9.0",
+        "pestphp/pest": "^3.0",
+        "pestphp/pest-plugin-laravel": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aura\\Blocks\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aura\\Blocks\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aura\\Blocks\\AuraBlocksServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "format": "vendor/bin/pint",
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "test": "vendor/bin/pest"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
