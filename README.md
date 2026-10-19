@@ -148,11 +148,14 @@ Use the field's normal validation plus optional block-count limits:
 
 ## Testing
 
+The standalone package test host uses Laravel 12.69+ with Testbench 10. Resolve the supported development dependencies and run the focused suite:
+
 ```bash
+composer update
 composer test
 ```
 
-The package test host covers field registration, add/edit/reorder/remove behavior, validation, Aura meta persistence and reload, custom templates, output escaping, and rendering order.
+The package test host covers field registration, cacheable package configuration, add/edit/reorder/remove behavior, validation, Aura meta persistence and reload, custom templates, output escaping, and rendering order. The configuration test exports and reloads the defaults using the same PHP serialization path as Laravel's `config:cache` command.
 
 ## License
 

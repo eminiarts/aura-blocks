@@ -12,6 +12,19 @@ test('the package registers the Blocks field and built in types', function () {
         ->and(array_keys(app(BlockRegistry::class)->registered()))->toBe(['text', 'image']);
 });
 
+test('the default configuration can be cached and reloaded', function () {
+    $configuration = ['aura-blocks' => require __DIR__.'/../../config/aura-blocks.php'];
+    $cachePath = tempnam(sys_get_temp_dir(), 'aura-blocks-config-');
+
+    file_put_contents($cachePath, '<?php return '.var_export($configuration, true).';');
+
+    $cached = require $cachePath;
+    unlink($cachePath);
+
+    expect($cached['aura-blocks']['types']['text'])->toBeArray()
+        ->and($cached['aura-blocks']['types']['image'])->toBeArray();
+});
+
 test('the field validates and round trips ordered block data', function () {
     $field = BlocksPage::getFields()[1];
     $blocks = [

@@ -2,13 +2,13 @@
 
 use Aura\Base\Fields\Text;
 use Aura\Base\Fields\Textarea;
-use Aura\Blocks\Support\BlockDefinition;
 
 return [
     'types' => [
-        BlockDefinition::make('text', 'Text')
-            ->icon('bars-3-bottom-left')
-            ->fields([
+        'text' => [
+            'label' => 'Text',
+            'icon' => 'bars-3-bottom-left',
+            'fields' => [
                 [
                     'name' => 'Heading',
                     'slug' => 'heading',
@@ -22,11 +22,13 @@ return [
                     'validation' => 'required|string|max:10000',
                     'rows' => 6,
                 ],
-            ])
-            ->view('aura-blocks::blocks.text'),
-        BlockDefinition::make('image', 'Image')
-            ->icon('photo')
-            ->fields([
+            ],
+            'view' => 'aura-blocks::blocks.text',
+        ],
+        'image' => [
+            'label' => 'Image',
+            'icon' => 'photo',
+            'fields' => [
                 [
                     'name' => 'Image URL',
                     'slug' => 'url',
@@ -47,7 +49,8 @@ return [
                     'validation' => 'nullable|string|max:1000',
                     'rows' => 3,
                 ],
-            ])
-            ->view('aura-blocks::blocks.image'),
+            ],
+            'view' => 'aura-blocks::blocks.image',
+        ],
     ],
 ];
