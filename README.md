@@ -148,7 +148,7 @@ Use the field's normal validation plus optional block-count limits:
 
 ## Testing
 
-The standalone package test host uses Laravel 12.69+ with Testbench 10. Resolve the supported development dependencies and run the focused suite:
+The standalone package test host uses Laravel 13 with Testbench 11 and Pest 4. Resolve the supported development dependencies and run the focused suite:
 
 ```bash
 composer update
