@@ -37,3 +37,17 @@ test('the editor refuses block types that are not enabled on the field', functio
         ->assertHasErrors('blockType')
         ->assertSet('value', []);
 });
+
+test('the editor uses Aura component classes so it follows the appearance settings', function () {
+    Livewire::test(BlocksEditor::class, [
+        'field' => ['slug' => 'content_blocks', 'blocks' => ['text']],
+        'value' => [],
+    ])
+        ->assertSeeHtml('data-aura-blocks-empty')
+        ->call('addBlock', 'text')
+        ->assertSeeHtml('border aura-group-section')
+        ->assertSeeHtml('aura-layout-row')
+        ->assertSeeHtml('aura-control-base')
+        ->assertSeeHtml('aura-button')
+        ->assertDontSeeHtml('rounded-xl');
+});

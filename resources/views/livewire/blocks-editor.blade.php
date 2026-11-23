@@ -1,5 +1,12 @@
-<div class="space-y-4" data-aura-blocks-editor>
-    <div class="space-y-3">
+{{--
+    Styles come from Aura's component classes (aura-cms resources/css/app.css), so the editor follows
+    the appearance settings: each block is a panel inside the field's panel (.aura-group-section:
+    panel padding and radius, section gap below), its fields sit in an .aura-layout-row, and the
+    controls are Aura buttons and selects at the base control height with the control radius.
+    This package has no CSS build of its own: use only classes that Aura's prebuilt CSS contains.
+--}}
+<div data-aura-blocks-editor>
+    <div>
         @forelse ($blocks as $index => $block)
             @php
                 $definition = $definitions[$block['type'] ?? ''] ?? null;
@@ -8,13 +15,13 @@
 
             @if ($definition)
                 <section
-                    class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-900"
+                    class="border aura-group-section"
                     wire:key="aura-block-{{ $blockId }}"
                     data-block-type="{{ $definition->type() }}"
                 >
-                    <header class="flex items-center justify-between gap-3 border-b border-gray-200 bg-gray-50 px-4 py-3 dark:border-gray-700 dark:bg-gray-800">
+                    <header class="flex items-center justify-between gap-3">
                         <div class="flex min-w-0 items-center gap-3">
-                            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-100 text-xs font-semibold text-primary-700 dark:bg-primary-900/40 dark:text-primary-300">
+                            <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold aura-chip-primary">
                                 {{ $index + 1 }}
                             </span>
                             <div class="min-w-0">
@@ -23,38 +30,36 @@
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-1">
-                            <button
-                                type="button"
-                                class="rounded-md p-1.5 text-gray-400 hover:bg-white hover:text-gray-700 disabled:cursor-not-allowed disabled:opacity-30 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                        <div class="flex shrink-0 items-center gap-1">
+                            <x-aura::button.transparent
+                                size="xs"
                                 wire:click="moveBlockUp({{ $index }})"
-                                @disabled($index === 0)
+                                :disabled="$index === 0"
                                 aria-label="{{ __('Move block up') }}"
                             >
-                                <x-aura::icon icon="chevron-up" size="xs" />
-                            </button>
-                            <button
-                                type="button"
-                                class="rounded-md p-1.5 text-gray-400 hover:bg-white hover:text-gray-700 disabled:cursor-not-allowed disabled:opacity-30 dark:hover:bg-gray-700 dark:hover:text-gray-200"
+                                <x-slot:icon><x-aura::icon icon="chevron-up" size="xs" /></x-slot:icon>
+                            </x-aura::button.transparent>
+                            <x-aura::button.transparent
+                                size="xs"
                                 wire:click="moveBlockDown({{ $index }})"
-                                @disabled($index === count($blocks) - 1)
+                                :disabled="$index === count($blocks) - 1"
                                 aria-label="{{ __('Move block down') }}"
                             >
-                                <x-aura::icon icon="chevron-down" size="xs" />
-                            </button>
-                            <button
-                                type="button"
-                                class="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+                                <x-slot:icon><x-aura::icon icon="chevron-down" size="xs" /></x-slot:icon>
+                            </x-aura::button.transparent>
+                            <x-aura::button.transparent
+                                size="xs"
+                                class="hover:text-red-500"
                                 wire:click="removeBlock({{ $index }})"
                                 wire:confirm="{{ __('Remove this block?') }}"
                                 aria-label="{{ __('Remove block') }}"
                             >
-                                <x-aura::icon icon="trash" size="xs" />
-                            </button>
+                                <x-slot:icon><x-aura::icon icon="trash" size="xs" /></x-slot:icon>
+                            </x-aura::button.transparent>
                         </div>
                     </header>
 
-                    <div class="flex flex-wrap py-4">
+                    <div class="flex flex-wrap items-start aura-layout-row">
                         @foreach ($definition->fieldsList() as $blockField)
                             @php
                                 $input = array_merge([
@@ -70,13 +75,13 @@
                     </div>
                 </section>
             @else
-                <section class="rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-950/30 dark:text-amber-200">
+                <section class="aura-alert aura-alert-warning aura-radius-panel" style="margin-bottom: var(--aura-section-gap, 1rem)">
                     {{ __('The :type block type is no longer registered.', ['type' => $block['type'] ?? __('unknown')]) }}
                     <button type="button" class="ml-2 font-semibold underline" wire:click="removeBlock({{ $index }})">{{ __('Remove') }}</button>
                 </section>
             @endif
         @empty
-            <div class="rounded-xl border border-dashed border-gray-300 bg-gray-50 px-5 py-8 text-center dark:border-gray-700 dark:bg-gray-900/50">
+            <div class="border border-dashed text-center aura-group-section" data-aura-blocks-empty>
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ __('No content blocks yet') }}</p>
                 <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ __('Choose a block type below to start building the content.') }}</p>
             </div>
@@ -84,22 +89,20 @@
     </div>
 
     @if ($definitions)
-        <div x-data="{ type: '{{ array_key_first($definitions) }}' }" class="flex flex-col gap-2 sm:flex-row sm:items-center">
-            <select
-                x-model="type"
-                class="block w-full rounded-lg border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:border-gray-700 dark:bg-gray-900 sm:max-w-xs"
-                aria-label="{{ __('Block type') }}"
-            >
-                @foreach ($definitions as $definition)
-                    <option value="{{ $definition->type() }}">{{ $definition->label() }}</option>
-                @endforeach
-            </select>
+        <div x-data="{ type: '{{ array_key_first($definitions) }}' }" class="flex items-center gap-2">
+            <div class="w-full min-w-0 md:w-72">
+                <x-aura::input.select
+                    :id="'aura-blocks-type-'.$this->getId()"
+                    x-model="type"
+                    :options="collect($definitions)->map(fn ($definition) => $definition->label())->all()"
+                    :selected="array_key_first($definitions)"
+                    aria-label="{{ __('Block type') }}"
+                />
+            </div>
 
-            <x-aura::button.border type="button" x-on:click="$wire.addBlock(type)" class="justify-center">
-                <span class="inline-flex items-center gap-2">
-                    <x-aura::icon icon="plus" size="xs" />
-                    {{ __('Add block') }}
-                </span>
+            <x-aura::button.border type="button" x-on:click="$wire.addBlock(type)" class="shrink-0">
+                <x-slot:icon><x-aura::icon icon="plus" size="xs" /></x-slot:icon>
+                {{ __('Add block') }}
             </x-aura::button.border>
         </div>
     @else
@@ -107,6 +110,6 @@
     @endif
 
     @error('blockType')
-        <p class="text-sm font-medium text-red-600 dark:text-red-400">{{ $message }}</p>
+        <p class="mt-2 text-sm font-medium text-red-600 dark:text-red-400">{{ $message }}</p>
     @enderror
 </div>
